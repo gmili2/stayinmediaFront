@@ -2,7 +2,6 @@
 import { useTheme } from 'vuetify'
 import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
 
-import logo from '@images/logo.svg?raw'
 import authV1MaskDark from '@images/pages/auth-v1-mask-dark.png'
 import authV1MaskLight from '@images/pages/auth-v1-mask-light.png'
 import authV1Tree2 from '@images/pages/auth-v1-tree-2.png'
@@ -59,25 +58,16 @@ const isPasswordVisible = ref(false)
       class="auth-card pa-4 pt-7"
       max-width="448"
     >
-      <VCardItem class="justify-center">
-        <template #prepend>
-          <div class="d-flex">
-            <div v-html="logo" />
+      <VCardItem class="text-center">
+          <div>
+            <img class='w-25  rounded rounded-pill' src='../assets/images/logos/stayinmedia_logo.jpeg'>
           </div>
-        </template>
+     </VCardItem>
 
-        <VCardTitle class="font-weight-semibold text-2xl text-uppercase">
-          Materio
-        </VCardTitle>
-      </VCardItem>
-
-      <VCardText class="pt-2">
+      <VCardText class="text-center">
         <h5 class="text-h5 font-weight-semibold mb-1">
-          Welcome to Materio! 👋🏻
+          Welcome to <strong>StayInMedia</strong>! 👋🏻
         </h5>
-        <p class="mb-0">
-          Please sign-in to your account and start the adventure
-        </p>
       </VCardText>
 
       <VCardText>
@@ -131,13 +121,8 @@ const isPasswordVisible = ref(false)
                 block
                 @click="handleSubmit"
               >
-                <div class="flex-row ga-4">
-                  <span>  Login</span>
-                  <div></div>
-                  <v-progress-circular
-                    color="primary"
-                    indeterminate
-                  ></v-progress-circular>
+                <div class="flex  text-center">
+                  <span>Login</span>
                 </div>
 
 
@@ -158,44 +143,17 @@ const isPasswordVisible = ref(false)
               </RouterLink>
             </VCol>
 
-            <VCol
-              cols="12"
-              class="d-flex align-center"
-            >
-              <VDivider />
-              <span class="mx-4">or</span>
-              <VDivider />
-            </VCol>
 
             <!-- auth providers -->
             <VCol
               cols="12"
               class="text-center"
             >
-              <AuthProvider />
             </VCol>
           </VRow>
         </VForm>
       </VCardText>
     </VCard>
-
-    <VImg
-      class="auth-footer-start-tree d-none d-md-block"
-      :src="authV1Tree"
-      :width="250"
-    />
-
-    <VImg
-      :src="authV1Tree2"
-      class="auth-footer-end-tree d-none d-md-block"
-      :width="350"
-    />
-
-    <!-- bg img -->
-    <VImg
-      class="auth-footer-mask d-none d-md-block"
-      :src="authThemeMask"
-    />
   </div>
 </template>
 
