@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import {decode} from '@/utils/decodeToken';
 import { router } from '@/plugins/router'
 // export const useAutStore = defineStore('auth', {
 //   state: () => {
@@ -49,6 +48,17 @@ export const useAutStore = defineStore('auth', () => {
           });
           const data2 = await response2.json();
           if (data2.token_decoded){
+// Assuming token_decoded is the object you received from the backend
+            const user = {
+              roles: data2.token_decoded.roles,
+              email: data2.token_decoded.email,
+              username: data2.token_decoded.username,
+              id: data2.token_decoded.id,
+              photo: data2.token_decoded.photo,
+            };
+
+           // const tokenDecodedString = JSON.stringify(user);
+            localStorage.setItem('user', JSON.stringify(user));
             router.push({ name: "Dashboard" });
           }
         }
