@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useTheme } from 'vuetify'
+import { useVuelidate } from '@vuelidate/core'
+import { email, minLength, required } from '@vuelidate/validators'
 import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
 
 import logo from '@images/logo.svg?raw'
@@ -8,37 +10,39 @@ import authV1MaskLight from '@images/pages/auth-v1-mask-light.png'
 import authV1Tree2 from '@images/pages/auth-v1-tree-2.png'
 import authV1Tree from '@images/pages/auth-v1-tree.png'
 import { useAutStore } from '@/stores/auth'
-import { useVuelidate } from '@vuelidate/core'
-import { required, email,minLength } from '@vuelidate/validators'
 
 const auth = useAutStore()
 
-auth.count++;
-// with autocompletion ✨
-auth.$patch({ count: auth.count + 1 });
 // or using an action instead
-auth.increment();
+auth.increment()
+
 const form = ref({
   email: '',
   password: '',
+
   // remember: false,
 })
 
 const rules = {
   email: { required, email },
-  password: { required, minLength: minLength(6) }
-};
-const v$ = useVuelidate(rules, form);
+  password: { required, minLength: minLength(6) },
+}
+
+const v$ = useVuelidate(rules, form)
+
 const handleSubmit = () => {
-  v$.value.$touch();
+  v$.value.$touch()
   console.log(!v$.value.$error)
   if (!v$.value.$error) {
-    auth.login(form.value.email,form.value.password)
+    auth.login(form.value.email, form.value.password)
+
     // Soumettre le formulaire
-  } else {
+  }
+  else {
     // Afficher des erreurs
   }
-};
+}
+
 const vuetifyTheme = useTheme()
 
 const authThemeMask = computed(() => {
@@ -53,7 +57,7 @@ const isPasswordVisible = ref(false)
 <template>
   hahah
   <!-- eslint-disable vue/no-v-html -->
-{{auth.count}}
+  {{ auth.count }}
   <div class="auth-wrapper d-flex align-center justify-center pa-4">
     <VCard
       class="auth-card pa-4 pt-7"
@@ -90,13 +94,13 @@ const isPasswordVisible = ref(false)
                 label="Email"
                 type="email"
               />
-              {{ }}
-<!--              {{// v$.email.$error}}-->
               <div v-if="v$.email.$error">
-                <span v-if="!v$.email.required.$response" style="color: red">Username is required.</span>
+                <span
+                  v-if="!v$.email.required.$response"
+                  style="color: red"
+                >Username is required.</span>
               </div>
             </VCol>
-
             <!-- password -->
             <VCol cols="12">
               <VTextField
@@ -108,22 +112,25 @@ const isPasswordVisible = ref(false)
                 @click:append-inner="isPasswordVisible = !isPasswordVisible"
               />
               <div v-if="v$.password.$error">
-                <span v-if="!v$.password.required.$response" style="color: red">Username is required.</span>
+                <span
+                  v-if="!v$.password.required.$response"
+                  style="color: red"
+                >Username is required.</span>
               </div>
 
               <!-- remember me checkbox -->
               <div class="d-flex align-center justify-space-between flex-wrap mt-1 mb-4">
-<!--                <VCheckbox-->
-<!--                  v-model="form.remember"-->
-<!--                  label="Remember me"-->
-<!--                />-->
+                <!--                <VCheckbox -->
+                <!--                  v-model="form.remember" -->
+                <!--                  label="Remember me" -->
+                <!--                /> -->
 
-<!--                <a-->
-<!--                  class="ms-2 mb-1"-->
-<!--                  href="javascript:void(0)"-->
-<!--                >-->
-<!--                  Forgot Password?-->
-<!--                </a>-->
+                <!--                <a -->
+                <!--                  class="ms-2 mb-1" -->
+                <!--                  href="javascript:void(0)" -->
+                <!--                > -->
+                <!--                  Forgot Password? -->
+                <!--                </a> -->
               </div>
 
               <!-- login button -->
@@ -133,14 +140,12 @@ const isPasswordVisible = ref(false)
               >
                 <div class="flex-row ga-4">
                   <span>  Login</span>
-                  <div></div>
-                  <v-progress-circular
+                  <div />
+                  <VProgressCircular
                     color="primary"
                     indeterminate
-                  ></v-progress-circular>
+                  />
                 </div>
-
-
               </VBtn>
             </VCol>
 

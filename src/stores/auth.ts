@@ -18,12 +18,14 @@ export const useAutStore = defineStore('auth', () => {
   function increment() {
     count.value++
   }
+
   const login = async (email, password) => {
     const auth = {
-      email: email,
-      password: password,
-    };
-alert('toto');
+      email,
+      password,
+    }
+
+    alert('toto')
     try {
       const response = await fetch('http://192.168.0.78:8000/api/login', {
         method: 'POST',
@@ -31,18 +33,15 @@ alert('toto');
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(auth),
-      });
+      })
 
-      if (!response.ok) {
-        throw new Error('Identifiant ou mot de passe incorrect. Veuillez réessayer.');
-      }
-
-
-
-    } catch (error) {
-      return Promise.reject(error.message);
+      if (!response.ok)
+        throw new Error('Identifiant ou mot de passe incorrect. Veuillez réessayer.')
     }
-  };
+    catch (error) {
+      return Promise.reject(error.message)
+    }
+  }
 
-  return { count, increment,login }
+  return { count, increment, login }
 })

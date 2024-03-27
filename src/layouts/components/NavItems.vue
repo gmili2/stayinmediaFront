@@ -106,7 +106,7 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
 
   <!-- 👉 Apps & Pages -->
 
-    <VerticalNavSectionTitle
+  <VerticalNavSectionTitle
     :item="{
       heading: 'notre App',
     }"
@@ -139,7 +139,6 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
         target: '_blank',
       }"
     />
-
   </VerticalNavGroup>
 
   <VerticalNavSectionTitle

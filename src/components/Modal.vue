@@ -1,45 +1,58 @@
+<script setup>
+import { defineEmits, defineProps } from 'vue'
+
+const props = defineProps({
+  show: Boolean,
+})
+
+const emit = defineEmits(['close'])
+
+const closeModal = () => {
+  if (props.show)
+    emit('close')
+}
+</script>
+
 <template>
   <Transition name="modal">
-    <div v-if="show" class="modal-mask" @click="closeModal">
-      <div class="modal-container" @click.stop>
+    <div
+      v-if="show"
+      class="modal-mask"
+      @click="closeModal"
+    >
+      <div
+        class="modal-container"
+        @click.stop
+      >
         <div class="modal-header">
           <div class="header-content">
-            <slot name="header"><!-- default header --></slot>
+            <slot name="header">
+              <!-- default header -->
+            </slot>
           </div>
-          <div class="header-content">
-            <span class="modal-close-icon" @click="closeModal">X</span>
+          <div class="">
+            <span
+              class="modal-close-icon"
+              @click="closeModal"
+            >X</span>
           </div>
         </div>
 
         <div class="modal-body">
-          <slot name="body"><!-- default body --></slot>
+          <slot name="body">
+            <!-- default body -->
+          </slot>
         </div>
 
         <div class="modal-footer">
-          <slot name="footer"><!-- default footer --></slot>
+          <slot name="footer">
+            <!-- default footer -->
+          </slot>
         </div>
       </div>
     </div>
   </Transition>
 </template>
-
-<script setup>
-import { defineProps, defineEmits } from 'vue';
-
-const props = defineProps({
-  show: Boolean
-});
-
-const closeModal = () => {
-  if (props.show) {
-    emit('close');
-  }
-}
-
-const emit = defineEmits(['close']);
-</script>
-
-
 
 <style>
 .modal-header {
@@ -73,8 +86,6 @@ const emit = defineEmits(['close']);
 }
 
 .modal-close-icon {
-  position: absolute;
-  top: 10px;
   right: 10px;
   cursor: pointer;
   font-size: 20px;
