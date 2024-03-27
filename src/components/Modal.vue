@@ -1,130 +1,133 @@
-<script setup>
-import { defineEmits, defineProps } from 'vue'
+  <script setup>
+  import { defineEmits, defineProps } from 'vue'
 
-const props = defineProps({
-  show: Boolean,
-})
+  const props = defineProps({
+    show: Boolean,
+  })
 
-const emit = defineEmits(['close'])
+  const emit = defineEmits(['close'])
 
-const closeModal = () => {
-  if (props.show)
-    emit('close')
-}
-</script>
+  const closeModal = () => {
+    if (props.show)
+      emit('close')
+  }
+  </script>
 
-<template>
-  <Transition name="modal">
-    <div
-      v-if="show"
-      class="modal-mask"
-      @click="closeModal"
-    >
+  <template>
+    <Transition name="modal">
       <div
-        class="modal-container"
-        @click.stop
+        v-if="show"
+        class="modal-mask"
+        @click="closeModal"
       >
-        <div class="modal-header">
-          <div class="header-content">
-            <slot name="header">
-              <!-- default header -->
+        <div
+          class="modal-container"
+          @click.stop
+        >
+          <div class="modal-header">
+            <div class="header-content">
+              <slot name="header">
+                <!-- default header -->
+              </slot>
+            </div>
+            <div class="">
+              <span
+                class="modal-close-icon"
+                @click="closeModal"
+              >X</span>
+            </div>
+          </div>
+
+          <div class="modal-body">
+            <slot name="body">
+              <!-- default body -->
             </slot>
           </div>
-          <div class="">
-            <span
-              class="modal-close-icon"
-              @click="closeModal"
-            >X</span>
+
+          <div class="modal-footer">
+            <slot name="footer">
+              <!-- default footer -->
+            </slot>
           </div>
         </div>
-
-        <div class="modal-body">
-          <slot name="body">
-            <!-- default body -->
-          </slot>
-        </div>
-
-        <div class="modal-footer">
-          <slot name="footer">
-            <!-- default footer -->
-          </slot>
-        </div>
       </div>
-    </div>
-  </Transition>
-</template>
+    </Transition>
+  </template>
 
-<style>
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-}
+  <style scoped>
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+  }
 
-.header-content {
-  flex: 1;
-}
-.modal-mask {
-  position: fixed;
-  z-index: 9998;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  transition: opacity 0.3s ease;
-}
+  .header-content {
 
-.modal-container {
-  max-width: 850px;
-  margin: auto;
-  padding: 20px 30px;
-  background-color: #fff;
-  border-radius: 2px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
-  transition: all 0.3s ease;
-}
+    flex: 1;
+  }
+  .modal-mask {
+    position: fixed;
+    z-index: 1008;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    transition: opacity 0.3s ease;
+  }
 
-.modal-close-icon {
-  right: 10px;
-  cursor: pointer;
-  font-size: 20px;
-  color: red; /* Couleur de l'icône de fermeture */
-}
+  .modal-container {
+    max-width: 850px;
+    margin: auto;
+    padding: 20px 30px;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+    transition: all 0.3s ease;
+  }
 
-.modal-header h3 {
-  margin-top: 0;
-  color: #42b983;
-}
+  .modal-close-icon {
+    right: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    color: red; /* Couleur de l'icône de fermeture */
+  }
 
-.modal-body {
-  margin: 20px 0;
-}
+  .modal-header h3 {
+    margin-top: 0;
+    color: #42b983;
+  }
 
-.modal-default-button {
-  float: right;
-}
+  .modal-body {
+    margin: 20px 0;
+    overflow: auto;
+    max-height: 50vh;
+  }
 
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
+  .modal-default-button {
+    float: right;
+  }
 
-.modal-enter-from {
-  opacity: 0;
-}
+  /*
+   * The following styles are auto-applied to elements with
+   * transition="modal" when their visibility is toggled
+   * by Vue.js.
+   *
+   * You can easily play with the modal transition by editing
+   * these styles.
+   */
 
-.modal-leave-to {
-  opacity: 0;
-}
+  .modal-enter-from {
+    opacity: 0;
+  }
 
-.modal-enter-from .modal-container,
-.modal-leave-to .modal-container {
-  -webkit-transform: scale(1.1);
-  transform: scale(1.1);
-}
-</style>
+  .modal-leave-to {
+    opacity: 0;
+  }
+
+  .modal-enter-from .modal-container,
+  .modal-leave-to .modal-container {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+  }
+  </style>

@@ -6,26 +6,37 @@ const form = ref({
   name: '',
   priority: '',
   status: '',
-  date_begin: '',
+  date_began: '',
   date_end: '',
   type: '',
   description: '',
   employed: '',
-
-  // remember: false,
 })
 
 const rules = {
   name: { required },
   priority: { required },
   status: { required },
-  date_begin: { required },
+  date_began: { required },
+  date_end: { required },
   type: { required },
   description: { required },
   employed: { required },
 }
 
 const v$ = useVuelidate(rules, form)
+
+const handleSubmit = () => {
+  v$.value.$touch()
+  console.log(!v$.value.$error)
+  if (!v$.value.$error) {
+    // auth.login(form.value.email, form.value.password)
+    alert('send request Post add task')
+  }
+  else {
+    // Afficher des erreurs
+  }
+}
 </script>
 
 <template>
@@ -33,6 +44,7 @@ const v$ = useVuelidate(rules, form)
     <VRow>
       <VCol cols="12">
         <VTextField
+          v-model="form.name"
           label="Task name"
           placeholder="John"
         />
@@ -40,12 +52,13 @@ const v$ = useVuelidate(rules, form)
           <span
             v-if="!v$.name.required.$response"
             style="color: red"
-          >Username is required.</span>
+          >name is required.</span>
         </div>
       </VCol>
 
       <VCol cols="12">
         <VSelect
+          v-model="form.priority"
           label="Priority"
           :items="['test', 'test2']"
         />
@@ -53,11 +66,12 @@ const v$ = useVuelidate(rules, form)
           <span
             v-if="!v$.priority.required.$response"
             style="color: red"
-          >Username is required.</span>
+          >priority is required.</span>
         </div>
       </VCol>
       <VCol cols="12">
         <VSelect
+          v-model="form.status"
           label="Status"
           :items="['test', 'test2']"
         />
@@ -65,31 +79,43 @@ const v$ = useVuelidate(rules, form)
           <span
             v-if="!v$.status.required.$response"
             style="color: red"
-          >Username is required.</span>
+          >status is required.</span>
         </div>
       </VCol>
       <VCol cols="12">
-        <VRow class="flex ga-4">
           <VTextField
+            v-model="form.date_began"
             label="Start"
             placeholder="John"
             type="date"
           />
-          <VTextField
-            label="End"
-            placeholder="John"
-            type="date"
-          />
-        </VRow>
-        <div v-if="v$.date_begin.$error">
-          <span
-            v-if="!v$.date_begin.required.$response"
-            style="color: red"
-          >Username is required.</span>
+        <div v-if="v$.date_end.$error">
+        <span
+          v-if="!v$.date_end.required.$response"
+          style="color: red"
+        >date began is required.</span>
         </div>
       </VCol>
       <VCol cols="12">
+
+      <VTextField
+        label="End"
+        v-model="form.date_end"
+        placeholder="John"
+        type="date"
+      />
+        <div v-if="v$.date_end.$error">
+
+        <span
+          v--if="!v$.date_began.required.$response"
+          style="color: red"
+        >date end is required.</span>
+        </div>
+      </VCol>
+
+      <VCol cols="12">
         <VSelect
+          v-model="form.employed"
           label="Assigne a"
           :items="['Texas', 'Wyoming']"
         />
@@ -104,6 +130,7 @@ const v$ = useVuelidate(rules, form)
       <VCol cols="12">
         <VTextField
           label="Description"
+          v-model="form.description"
           outlined
         />
         <div v-if="v$.description.$error">
@@ -117,8 +144,8 @@ const v$ = useVuelidate(rules, form)
         <label>Type</label>
         <VRow>
           <VCol cols="12">
-            <VRadio label="Feature" />
-            <VRadio label="Bug" />
+            <VRadio label="Feature" v-model="form.type" />
+            <VRadio label="Bug"  v-model="form.type" />
           </VCol>
         </VRow>
         <div v-if="v$.type.$error">
@@ -133,7 +160,7 @@ const v$ = useVuelidate(rules, form)
         cols="12"
         class="d-flex gap-4"
       >
-        <VBtn type="submit">
+        <VBtn type="submit" @click="handleSubmit">
           Submit
         </VBtn>
 

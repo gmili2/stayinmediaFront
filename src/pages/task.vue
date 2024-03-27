@@ -84,6 +84,7 @@ const doneListClass = ref('done-list')
           <VCard>
             <VCardText>
               <AddTaskForm />
+
             </VCardText>
           </VCard>
         </template>
