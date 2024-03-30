@@ -4,7 +4,6 @@ import Modal from '@/components/Modal.vue'
 import AddTaskForm from '@/views/pages/form-layouts/AddTaskForm.vue'
 
 const showModal = ref(false)
-const isOpen = ref(false)
 
 // Données initiales des tâches à faire
 const todoList = ref([

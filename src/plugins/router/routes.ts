@@ -13,6 +13,10 @@ export const routes = [
         component: () => import('@/pages/task.vue'),
       },
       {
+        path: 'users',
+        component: () => import('@/pages/users.vue'),
+      },
+      {
         path: 'add-task',
         component: () => import('@/pages/add-task.vue'),
       },
