@@ -5,6 +5,7 @@ export const routes = [
     component: () => import('@/layouts/default.vue'),
     children: [
       {
+        name: 'Dashboard',
         path: 'dashboard',
         component: () => import('@/pages/dashboard.vue'),
       },

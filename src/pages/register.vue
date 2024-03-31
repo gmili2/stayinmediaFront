@@ -34,26 +34,11 @@ const isPasswordVisible = ref(false)
       class="auth-card pa-4 pt-7"
       max-width="448"
     >
-      <VCardItem class="justify-center">
-        <template #prepend>
-          <div class="d-flex">
-            <div v-html="logo" />
-          </div>
-        </template>
-
-        <VCardTitle class="font-weight-semibold text-2xl text-uppercase">
-          Materio
-        </VCardTitle>
+      <VCardItem class="text-center">
+        <div>
+          <img class='w-25  rounded rounded-pill' src='../assets/images/logos/stayinmedia_logo.jpeg'>
+        </div>
       </VCardItem>
-
-      <VCardText class="pt-2">
-        <h5 class="text-h5 font-weight-semibold mb-1">
-          Adventure starts here 🚀
-        </h5>
-        <p class="mb-0">
-          Make your app management easy and fun!
-        </p>
-      </VCardText>
 
       <VCardText>
         <VForm @submit.prevent="() => {}">
@@ -76,6 +61,15 @@ const isPasswordVisible = ref(false)
               />
             </VCol>
 
+            <!--avatar-->
+            <VCol cols="12">
+              <VFileInput
+                accept="image/png, image/jpeg"
+                label="Photo (image/jpeg/png)"
+                placeholder="Pick an avatar"
+              />
+            </VCol>
+
             <!-- password -->
             <VCol cols="12">
               <VTextField
@@ -86,6 +80,7 @@ const isPasswordVisible = ref(false)
                 :append-inner-icon="isPasswordVisible ? 'ri-eye-off-line' : 'ri-eye-line'"
                 @click:append-inner="isPasswordVisible = !isPasswordVisible"
               />
+
               <div class="d-flex align-center mt-1 mb-4">
                 <VCheckbox
                   id="privacy-policy"
@@ -125,23 +120,6 @@ const isPasswordVisible = ref(false)
               >
                 Sign in instead
               </RouterLink>
-            </VCol>
-
-            <VCol
-              cols="12"
-              class="d-flex align-center"
-            >
-              <VDivider />
-              <span class="mx-4">or</span>
-              <VDivider />
-            </VCol>
-
-            <!-- auth providers -->
-            <VCol
-              cols="12"
-              class="text-center"
-            >
-              <AuthProvider />
             </VCol>
           </VRow>
         </VForm>

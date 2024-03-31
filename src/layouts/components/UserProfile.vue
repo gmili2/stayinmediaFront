@@ -1,5 +1,16 @@
 <script setup lang="ts">
 import avatar1 from '@images/avatars/avatar-1.png'
+import { ref } from 'vue';
+
+const user = ref<string | null>(null);
+
+const storedUser = localStorage.getItem('user');
+
+if (storedUser !== null) {
+  const parsedUser = JSON.parse(storedUser);
+  user.value = parsedUser;
+}
+
 </script>
 
 <template>
@@ -16,7 +27,7 @@ import avatar1 from '@images/avatars/avatar-1.png'
       color="primary"
       variant="tonal"
     >
-      <VImg :src="avatar1" />
+      <VImg :src="user.photo" />
 
       <!-- SECTION Menu -->
       <VMenu
@@ -41,16 +52,17 @@ import avatar1 from '@images/avatars/avatar-1.png'
                     color="primary"
                     variant="tonal"
                   >
-                    <VImg :src="avatar1" />
+                    <VImg :src="user.photo" />
                   </VAvatar>
                 </VBadge>
               </VListItemAction>
             </template>
-
             <VListItemTitle class="font-weight-semibold">
-              John Doe
+              {{user.username}}
             </VListItemTitle>
-            <VListItemSubtitle>Admin</VListItemSubtitle>
+            <VListItemSubtitle v-for='role in user.roles' :key='role'>
+              {{ role }}
+            </VListItemSubtitle>
           </VListItem>
           <VDivider class="my-2" />
 
