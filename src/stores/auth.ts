@@ -1,17 +1,5 @@
 import { defineStore } from 'pinia'
 import { router } from '@/plugins/router'
-// export const useAutStore = defineStore('auth', {
-//   state: () => {
-//     return { count: 0 }
-//   },
-//   // could also be defined as
-//   // state: () => ({ count: 0 })
-//   actions: {
-//     increment() {
-//       this.count++
-//     },
-//   },
-// })
 
 export const useAutStore = defineStore('auth', () => {
   const count = ref(0)
@@ -31,7 +19,7 @@ export const useAutStore = defineStore('auth', () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(auth),
-      });
+      })
 
       if (response.ok) {
         // Parse the JSON response body
@@ -48,7 +36,6 @@ export const useAutStore = defineStore('auth', () => {
           });
           const data2 = await response2.json();
           if (data2.token_decoded){
-// Assuming token_decoded is the object you received from the backend
             const user = {
               roles: data2.token_decoded.roles,
               email: data2.token_decoded.email,
@@ -56,18 +43,13 @@ export const useAutStore = defineStore('auth', () => {
               id: data2.token_decoded.id,
               photo: data2.token_decoded.photo,
             };
-
-           // const tokenDecodedString = JSON.stringify(user);
             localStorage.setItem('user', JSON.stringify(user));
             router.push({ name: "Dashboard" });
           }
         }
 
-
-
         localStorage.setItem('token', token);
 
-        // You can also return the token if needed
         return token;
       } else {
         throw new Error('Identifiant ou mot de passe incorrect. Veuillez réessayer.');
