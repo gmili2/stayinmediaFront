@@ -64,14 +64,10 @@ import UserProfile from '@/layouts/components/UserProfile.vue'
         to="/"
         class="app-logo app-title-wrapper"
       >
-        <div
-          class="d-flex"
-          v-html="logo"
-        />
+        <div class="circle">
+          <div class="svg-container" v-html="logo"></div>
+        </div>
 
-        <h1 class="font-weight-medium leading-normal text-xl text-uppercase">
-          Materio
-        </h1>
       </RouterLink>
 
       <IconBtn
@@ -118,4 +114,9 @@ import UserProfile from '@/layouts/components/UserProfile.vue'
     text-transform: uppercase;
   }
 }
+.svg-container {
+  width: 100px; /* Définissez la largeur de votre conteneur SVG */
+  height: 100px; /* Définissez la hauteur de votre conteneur SVG */
+}
+
 </style>

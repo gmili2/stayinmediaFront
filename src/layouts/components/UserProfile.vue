@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import avatar1 from '@images/avatars/avatar-1.png'
 import { ref } from 'vue';
+import {router} from "@/plugins/router";
 
 const user = ref<string | null>(null);
-
+const logout=()=>{
+  localStorage.clear();
+  router.push({ name: "Login" });
+}
 const storedUser = localStorage.getItem('user');
 
 if (storedUser !== null) {
@@ -122,7 +126,7 @@ if (storedUser !== null) {
           <VDivider class="my-2" />
 
           <!-- 👉 Logout -->
-          <VListItem to="/login">
+          <VListItem  @click="logout">
             <template #prepend>
               <VIcon
                 class="me-2"

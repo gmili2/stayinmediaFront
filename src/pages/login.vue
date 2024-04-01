@@ -1,63 +1,52 @@
 <script setup lang="ts">
-import { useTheme } from 'vuetify'
 import { useVuelidate } from '@vuelidate/core'
 import { email, minLength, required } from '@vuelidate/validators'
-import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
-
-import authV1MaskDark from '@images/pages/auth-v1-mask-dark.png'
-import authV1MaskLight from '@images/pages/auth-v1-mask-light.png'
-import authV1Tree2 from '@images/pages/auth-v1-tree-2.png'
-import authV1Tree from '@images/pages/auth-v1-tree.png'
 import { useAutStore } from '@/stores/auth'
-
+import {router} from "@/plugins/router";
+import {useToast} from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-sugar.css';
 const auth = useAutStore()
-
-auth.count++;
-// with autocompletion ✨
-auth.$patch({ count: auth.count + 1 });
-// or using an action instead
-auth.increment();
+const isPasswordVisible = ref(false)
 const form = ref({
   email: '',
   password: '',
   // remember: false,
 })
-
 const rules = {
   email: { required, email },
   password: { required, minLength: minLength(6) },
 }
-
 const v$ = useVuelidate(rules, form)
-
-const handleSubmit = () => {
+const isLoanding=ref(false)
+const $toast = useToast();
+const handleSubmit = async () => {
   v$.value.$touch()
-  console.log(!v$.value.$error)
   if (!v$.value.$error) {
-    auth.login(form.value.email, form.value.password)
-
-    // Soumettre le formulaire
+    isLoanding.value=true
+    await auth.login(form.value.email, form.value.password).then(response => {
+      $toast.open({
+        message: 'Bienvenue',
+        type: 'success',
+        position:"top-right"
+      });
+      router.push({ name: "Dashboard" });
+    }).catch(error=>{
+   $toast.open({
+        message: error,
+        type: 'error',
+        position:"top-right"
+      });
+    })
+    isLoanding.value=false
   }
   else {
     // Afficher des erreurs
   }
 }
 
-const vuetifyTheme = useTheme()
-
-const authThemeMask = computed(() => {
-  return vuetifyTheme.global.name.value === 'light'
-    ? authV1MaskLight
-    : authV1MaskDark
-})
-
-const isPasswordVisible = ref(false)
 </script>
 
 <template>
-  hahah
-  <!-- eslint-disable vue/no-v-html -->
-{{auth.count}}
   <div class="auth-wrapper d-flex align-center justify-center pa-4">
     <VCard
       class="auth-card pa-4 pt-7"
@@ -108,33 +97,22 @@ const isPasswordVisible = ref(false)
                   style="color: red"
                 >Username is required.</span>
               </div>
-
-              <!-- remember me checkbox -->
               <div class="d-flex align-center justify-space-between flex-wrap mt-1 mb-4">
-                <!--                <VCheckbox -->
-                <!--                  v-model="form.remember" -->
-                <!--                  label="Remember me" -->
-                <!--                /> -->
-
-                <!--                <a -->
-                <!--                  class="ms-2 mb-1" -->
-                <!--                  href="javascript:void(0)" -->
-                <!--                > -->
-                <!--                  Forgot Password? -->
-                <!--                </a> -->
               </div>
-
-              <!-- login button -->
               <VBtn
                 block
                 @click="handleSubmit"
               >
-                <div class="flex  text-center">
+                <div class="flex">
                   <span>Login</span>
+                  <span v-if="isLoanding">
+                    <VProgressCircular
+                    color="primary"
+                    indeterminate
+                  /></span>
                 </div>
               </VBtn>
             </VCol>
-
             <!-- create account -->
             <VCol
               cols="12"
