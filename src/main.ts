@@ -1,17 +1,23 @@
-import { createApp } from 'vue'
-
-import App from '@/App.vue'
-import { registerPlugins } from '@core/utils/plugins'
-
+import { createApp } from 'vue';
+import App from '@/App.vue';
+import { registerPlugins } from '@core/utils/plugins';
+import { toast } from 'vue3-toastify'; // Importez toast
+import 'vue3-toastify/dist/index.css';
+import ToastPlugin from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-bootstrap.css';
 // Styles
-import '@core/scss/template/index.scss'
-import '@layouts/styles/index.scss'
+import '@core/scss/template/index.scss';
+import '@layouts/styles/index.scss';
 
-// Create vue app
-const app = createApp(App)
+// Créez l'application Vue
+const app = createApp(App);
+app.use(ToastPlugin);
 
-// Register plugins
-registerPlugins(app)
+// Enregistrez les plugins
+registerPlugins(app);
 
-// Mount vue app
-app.mount('#app')
+// Montez l'application Vue
+app.mount('#app');
+
+// Ajoutez toast au prototype de Vue
+app.config.globalProperties.$toast = toast;
