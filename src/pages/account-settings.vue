@@ -35,7 +35,6 @@ const tabs = [
         {{ item.title }}
       </VTab>
     </VTabs>
-
     <VWindow
       v-model="activeTab"
       class="mt-5 disable-tab-transition"

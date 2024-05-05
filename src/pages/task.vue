@@ -94,8 +94,7 @@ const doneListClass = ref('done-list')
         <template #body>
           <VCard>
             <VCardText>
-              <AddTaskForm />
-
+              <AddTaskForm @handle-submit="showModal=false"/>
             </VCardText>
           </VCard>
         </template>
@@ -193,7 +192,6 @@ const doneListClass = ref('done-list')
                   color="primary"
                   @click="moveToDone(index)"
                 >
-                  {{ doneButtonLabel }}
                 </VBtn>
               </VExpansionPanelText>
             </VExpansionPanel>

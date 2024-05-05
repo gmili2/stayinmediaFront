@@ -10,7 +10,7 @@ export const useTaskStore = defineStore('autaskth', () => {
   const getAllTaskById = async (code:string) => {
     const url_back = import.meta.env.VITE_BACK_URL;
     try {
-      const response = await fetch(`${url_back}/api/tasks/type/${code}`, {
+      const response = await fetch(`${url_back}/api/tasks/status/${code}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -54,23 +54,16 @@ export const useTaskStore = defineStore('autaskth', () => {
 
   const addTask = async (task:any) => {
     const url_back = import.meta.env.VITE_BACK_URL;
-    try {
+
       const response = await fetch(`${url_back}/api/task`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: task
+        body: JSON.stringify(task)
       })
-      if (response.ok) {
-        let data= await response.json()
-        console.log(data);
-      } else {
-        throw new Error('Identifiant ou mot de passe incorrect. Veuillez réessayer.');
-      }
-    } catch (error:any) {
-      return Promise.reject(error.message);
-    }
+    let data= await response.json()
+    return data;
   }
   return { getAllTaskById,deleteTask,tasks,addTask,tasksToDo,tasksInprogress,tasksDone }
 })

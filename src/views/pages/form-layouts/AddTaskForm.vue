@@ -6,37 +6,47 @@ const form = ref({
   name: '',
   priority: '',
   status: '',
-  date_began: '',
-  date_end: '',
+  start_date: '',
+  end_date: '',
   type: '',
   description: '',
-  employed: '',
+  owner: '',
 })
 
 const rules = {
   name: { required },
   priority: { required },
   status: { required },
-  date_began: { required },
-  date_end: { required },
+  start_date: { required },
+  end_date: { required },
   type: { required },
   description: { required },
-  employed: { required },
+  owner: { required },
 }
 
 const v$ = useVuelidate(rules, form)
+import {useTaskStore} from "@/stores/task";
+import {useToast} from "vue-toast-notification";
+const $toast = useToast();
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
   v$.value.$touch()
   console.log(!v$.value.$error)
   if (!v$.value.$error) {
-    // auth.login(form.value.email, form.value.password)
-    alert('send request Post add task')
+    await useTaskStore().addTask(form.value).then(async (response:any)  =>{
+      $toast.open({
+        message: 'Task added successfully',
+        type: 'success',
+        position:"top-right"
+      });
+      await useTaskStore().getAllTaskById("TODO");
+      await useTaskStore().getAllTaskById("IN_PROGRESS");
+      await useTaskStore().getAllTaskById('DONE');
+    })
   }
-  else {
-    // Afficher des erreurs
-  }
+  emit('handleSubmit')
 }
+const emit = defineEmits(['handleSubmit'])
 </script>
 
 <template>
@@ -60,8 +70,9 @@ const handleSubmit = () => {
         <VSelect
           v-model="form.priority"
           label="Priority"
-          :items="['test', 'test2']"
-        />
+          :items="[{name:'Low',id:21}, {name:'Hi',id:22}]"
+          item-title="name"
+          item-value="id"       />
         <div v-if="v$.priority.$error">
           <span
             v-if="!v$.priority.required.$response"
@@ -73,8 +84,9 @@ const handleSubmit = () => {
         <VSelect
           v-model="form.status"
           label="Status"
-          :items="['test', 'test2']"
-        />
+          :items="[{name:'TODO',id:25}, {name:'IN_PROGRESS',id:2,name:'IN_PROGRESS',id:27}]"
+          item-title="name"
+          item-value="id"        />
         <div v-if="v$.status.$error">
           <span
             v-if="!v$.status.required.$response"
@@ -84,14 +96,14 @@ const handleSubmit = () => {
       </VCol>
       <VCol cols="12">
           <VTextField
-            v-model="form.date_began"
+            v-model="form.start_date"
             label="Start"
             placeholder="John"
-            type="date"
+            type="datetime-local"
           />
-        <div v-if="v$.date_end.$error">
+        <div v-if="v$.end_date.$error">
         <span
-          v-if="!v$.date_end.required.$response"
+          v-if="!v$.end_date.required.$response"
           style="color: red"
         >date began is required.</span>
         </div>
@@ -100,14 +112,14 @@ const handleSubmit = () => {
 
       <VTextField
         label="End"
-        v-model="form.date_end"
+        v-model="form.end_date"
         placeholder="John"
-        type="date"
+        type="datetime-local"
       />
-        <div v-if="v$.date_end.$error">
+        <div v-if="v$.end_date.$error">
 
         <span
-          v--if="!v$.date_began.required.$response"
+          v--if="!v$.start_date.required.$response"
           style="color: red"
         >date end is required.</span>
         </div>
@@ -115,13 +127,15 @@ const handleSubmit = () => {
 
       <VCol cols="12">
         <VSelect
-          v-model="form.employed"
+          v-model="form.owner"
           label="Assigne a"
-          :items="['Texas', 'Wyoming']"
+          :items="[{name:'Texas',id:27}, {name:'test',id:28}]"
+          item-title="name"
+          item-value="id"
         />
-        <div v-if="v$.employed.$error">
+        <div v-if="v$.owner.$error">
           <span
-            v-if="!v$.employed.required.$response"
+            v-if="!v$.owner.required.$response"
             style="color: red"
           >Username is required.</span>
         </div>
@@ -143,10 +157,9 @@ const handleSubmit = () => {
       <VCol cols="12">
         <label>Type</label>
         <VRow>
-          <VCol cols="12">
-            <VRadio label="Feature" v-model="form.type" />
-            <VRadio label="Bug"  v-model="form.type" />
-          </VCol>
+          <v-radio-group v-model="form.type">
+            <VRadio v-for="type in [{type:'Bug',id:19},{type:'Feature',id:20}]" :key="type.id" :label="type.type" :value="type.id" />
+          </v-radio-group>
         </VRow>
         <div v-if="v$.type.$error">
           <span
