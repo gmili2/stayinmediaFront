@@ -2,9 +2,20 @@
 import { ref } from 'vue'
 import Modal from '@/components/Modal.vue'
 import AddTaskForm from '@/views/pages/form-layouts/AddTaskForm.vue'
+import {useTaskStore} from "@/stores/task";
 
 const showModal = ref(false)
-
+const isLoading = ref(false)
+const allTasks = ref([])
+const  getAllTasks=async () => {
+  isLoading.value=true
+  await useTaskStore().getAllTaskById("TODO");
+  await useTaskStore().getAllTaskById("IN_PROGRESS");
+  await useTaskStore().getAllTaskById('DONE');
+  allTasks.value=useTaskStore().tasks;
+  isLoading.value=false
+}
+getAllTasks();
 // Données initiales des tâches à faire
 const todoList = ref([
   {
@@ -59,6 +70,7 @@ const doneListClass = ref('done-list')
 </script>
 
 <template>
+  {{useTaskStore().tasksToDo}}
   <div>
     <VRow class="justify-end mb-4">
       <VBtn
@@ -101,7 +113,7 @@ const doneListClass = ref('done-list')
         >
           <VExpansionPanels>
             <VExpansionPanel
-              v-for="(task, index) in todoList"
+              v-for="(task, index) in useTaskStore().tasksToDo"
               :key="index"
             >
               <VExpansionPanelTitle>
@@ -112,19 +124,19 @@ const doneListClass = ref('done-list')
                   <div class="user-info">
                     <img
                       class="w-25 h-25"
-                      src="https://t4.ftcdn.net/jpg/02/29/75/83/360_F_229758328_7x8jwCwjtBMmC6rgFzLFhZoEpLobB6L8.jpg"
+                      :src="task.owner.photo"
                       alt="Image utilisateur"
                     >
-                    <div>User: Ahmed</div>
+                    <div>User: {{ task.name }}</div>
                   </div>
                   <div :class="{ 'bug-type': task.type === 'Bug' }">
                     Type: {{ task.type }}
                   </div>
                   <div :class="{ 'expired-date': isDateExpired(task.endDate) }">
-                    Date début: {{ task.startDate }}
+                    Date début: {{ task.start_date }}
                   </div>
                   <div :class="{ 'expired-date': isDateExpired(task.endDate) }">
-                    Date fin: {{ task.endDate }}
+                    Date fin: {{ task.end_date }}
                   </div>
                 </div>
                 <VBtn
@@ -150,7 +162,7 @@ const doneListClass = ref('done-list')
         >
           <VExpansionPanels>
             <VExpansionPanel
-              v-for="(task, index) in progressList"
+              v-for="(task, index) in useTaskStore().tasksInprogress"
               :key="index"
             >
               <VExpansionPanelTitle>
@@ -161,19 +173,19 @@ const doneListClass = ref('done-list')
                   <div class="user-info">
                     <img
                       class="w-25 h-25"
-                      src="https://t4.ftcdn.net/jpg/02/29/75/83/360_F_229758328_7x8jwCwjtBMmC6rgFzLFhZoEpLobB6L8.jpg"
+                      :src="task.owner.photo"
                       alt="Image utilisateur"
                     >
-                    <div>User: Ahmed</div>
+                    <div>User: {{ task.name }}</div>
                   </div>
                   <div :class="{ 'bug-type': task.type === 'Bug' }">
                     Type: {{ task.type }}
                   </div>
                   <div :class="{ 'expired-date': isDateExpired(task.endDate) }">
-                    Date début: {{ task.startDate }}
+                    Date début: {{ task.start_date  }}
                   </div>
                   <div :class="{ 'expired-date': isDateExpired(task.endDate) }">
-                    Date fin: {{ task.endDate }}
+                    Date fin: {{ task.end_date }}
                   </div>
                 </div>
                 <VBtn
@@ -197,8 +209,44 @@ const doneListClass = ref('done-list')
           :class="doneListClass"
           title="Done"
         >
-          <!-- Affichage des tâches terminées -->
-        </VCard>
+          <VExpansionPanels>
+            <VExpansionPanel
+              v-for="(task, index) in useTaskStore().tasksDone"
+              :key="index"
+            >
+              <VExpansionPanelTitle>
+                {{ task.name }}
+              </VExpansionPanelTitle>
+              <VExpansionPanelText>
+                <div class="custom-content">
+                  <div class="user-info">
+                    <img
+                      class="w-25 h-25"
+                      :src="task.owner.photo"
+                      alt="Image utilisateur"
+                    >
+                    <div>User: {{ task.name }}</div>
+                  </div>
+                  <div :class="{ 'bug-type': task.type === 'Bug' }">
+                    Type: {{ task.type }}
+                  </div>
+                  <div :class="{ 'expired-date': isDateExpired(task.endDate) }">
+                    Date début: {{ task.start_date  }}
+                  </div>
+                  <div :class="{ 'expired-date': isDateExpired(task.endDate) }">
+                    Date fin: {{ task.end_date }}
+                  </div>
+                </div>
+                <VBtn
+                  class="mt-4"
+                  color="primary"
+                  @click="moveToDone(index)"
+                >
+                  {{ doneButtonLabel }}
+                </VBtn>
+              </VExpansionPanelText>
+            </VExpansionPanel>
+          </VExpansionPanels>        </VCard>
       </VCol>
     </VRow>
   </div>

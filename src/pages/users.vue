@@ -13,7 +13,7 @@
                 color="primary"
                 @click="showModal = true"
               >
-                Add Task
+                Add User
               </VBtn>
             </VRow>
           </div>
@@ -29,7 +29,7 @@
             <template #body>
               <VCard>
                 <VCardText>
-                  <AddUserForm />
+                  <AddUserForm @handle-submit="showModal = false,useUserStore().getAllUser()"/>
                 </VCardText>
               </VCard>
             </template>
@@ -46,5 +46,6 @@ import UsersTable from "@/views/pages/tables/usersTable.vue";
 import {ref} from "vue";
 import Modal from "@/components/Modal.vue";
 import AddUserForm from "@/views/pages/form-layouts/AddUserForm.vue";
+import {useUserStore} from "@/stores/user";
 const showModal = ref(false)
 </script>
