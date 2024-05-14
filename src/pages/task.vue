@@ -3,8 +3,11 @@ import { ref } from 'vue'
 import Modal from '@/components/Modal.vue'
 import AddTaskForm from '@/views/pages/form-layouts/AddTaskForm.vue'
 import {useTaskStore} from "@/stores/task";
+import CardTask from "@/views/pages/cards/cardTask.vue";
+import EditTaskForm from "@/views/pages/form-layouts/EditTaskForm.vue";
 
 const showModal = ref(false)
+const showModalEdit = ref(false)
 const isLoading = ref(false)
 const allTasks = ref([])
 const  getAllTasks=async () => {
@@ -59,18 +62,22 @@ const moveToDone = (index: number) => {
   doneList.value.push(taskToMove)
 }
 
-// Variables pour les libellés des boutons
 const progressButtonLabel = ref('Passer à la progression')
 const doneButtonLabel = ref('Passer à Done')
 
-// Classes pour les styles spécifiques à chaque liste
 const todoListClass = ref('todo-list')
 const progressListClass = ref('progress-list')
 const doneListClass = ref('done-list')
+const taskAEdit=ref<any>();
+function  showModalEditTask (task:any){
+  showModalEdit.value=true
+  taskAEdit.value= {...task}
+}
+
+
 </script>
 
 <template>
-  {{useTaskStore().tasksToDo}}
   <div>
     <VRow class="justify-end mb-4">
       <VBtn
@@ -80,10 +87,7 @@ const doneListClass = ref('done-list')
         Add Task
       </VBtn>
     </VRow>
-    <!--    <button id="show-modal"  = true">Show Modal</button> -->
-
     <Teleport to="body">
-      <!-- use the modal component, pass in the prop -->
       <Modal
         :show="showModal"
         @close="showModal = false"
@@ -116,35 +120,13 @@ const doneListClass = ref('done-list')
               :key="index"
             >
               <VExpansionPanelTitle>
-                {{ task.name }}
+                  <div class="w-64">
+                    <div>{{ task.name }}</div>
+                    <div>{{ task.type }}</div>
+                  </div>
               </VExpansionPanelTitle>
               <VExpansionPanelText>
-                <div class="custom-content">
-                  <div class="user-info">
-                    <img
-                      class="w-25 h-25"
-                      :src="task.owner.photo"
-                      alt="Image utilisateur"
-                    >
-                    <div>User: {{ task.name }}</div>
-                  </div>
-                  <div :class="{ 'bug-type': task.type === 'Bug' }">
-                    Type: {{ task.type }}
-                  </div>
-                  <div :class="{ 'expired-date': isDateExpired(task.endDate) }">
-                    Date début: {{ task.start_date }}
-                  </div>
-                  <div :class="{ 'expired-date': isDateExpired(task.endDate) }">
-                    Date fin: {{ task.end_date }}
-                  </div>
-                </div>
-                <VBtn
-                  class="mt-4"
-                  color="primary"
-                  @click="moveToProgress(index)"
-                >
-                  {{ progressButtonLabel }}
-                </VBtn>
+                <card-task :Task="task"  @edit-task="showModalEditTask(task)"></card-task>
               </VExpansionPanelText>
             </VExpansionPanel>
           </VExpansionPanels>
@@ -167,33 +149,8 @@ const doneListClass = ref('done-list')
               <VExpansionPanelTitle>
                 {{ task.name }}
               </VExpansionPanelTitle>
-              <VExpansionPanelText>
-                <div class="custom-content">
-                  <div class="user-info">
-                    <img
-                      class="w-25 h-25"
-                      :src="task.owner.photo"
-                      alt="Image utilisateur"
-                    >
-                    <div>User: {{ task.name }}</div>
-                  </div>
-                  <div :class="{ 'bug-type': task.type === 'Bug' }">
-                    Type: {{ task.type }}
-                  </div>
-                  <div :class="{ 'expired-date': isDateExpired(task.endDate) }">
-                    Date début: {{ task.start_date  }}
-                  </div>
-                  <div :class="{ 'expired-date': isDateExpired(task.endDate) }">
-                    Date fin: {{ task.end_date }}
-                  </div>
-                </div>
-                <VBtn
-                  class="mt-4"
-                  color="primary"
-                  @click="moveToDone(index)"
-                >
-                </VBtn>
-              </VExpansionPanelText>
+              <card-task :Task="task"></card-task>
+
             </VExpansionPanel>
           </VExpansionPanels>
         </VCard>
@@ -215,53 +172,44 @@ const doneListClass = ref('done-list')
               <VExpansionPanelTitle>
                 {{ task.name }}
               </VExpansionPanelTitle>
-              <VExpansionPanelText>
-                <div class="custom-content">
-                  <div class="user-info">
-                    <img
-                      class="w-25 h-25"
-                      :src="task.owner.photo"
-                      alt="Image utilisateur"
-                    >
-                    <div>User: {{ task.name }}</div>
-                  </div>
-                  <div :class="{ 'bug-type': task.type === 'Bug' }">
-                    Type: {{ task.type }}
-                  </div>
-                  <div :class="{ 'expired-date': isDateExpired(task.endDate) }">
-                    Date début: {{ task.start_date  }}
-                  </div>
-                  <div :class="{ 'expired-date': isDateExpired(task.endDate) }">
-                    Date fin: {{ task.end_date }}
-                  </div>
-                </div>
-                <VBtn
-                  class="mt-4"
-                  color="primary"
-                  @click="moveToDone(index)"
-                >
-                  {{ doneButtonLabel }}
-                </VBtn>
-              </VExpansionPanelText>
+              <card-task :Task="task" @edit-task="showModalEditTask()"></card-task>
             </VExpansionPanel>
-          </VExpansionPanels>        </VCard>
+          </VExpansionPanels>
+        </VCard>
       </VCol>
     </VRow>
+    <Teleport to="body">
+      <Modal
+        :show="showModalEdit"
+        @close="showModalEdit = false"
+      >
+        <template #header>
+          <h3>Edit task</h3>
+        </template>
+        <template #body>
+          <VCard>
+            <VCardText>
+              <EditTaskForm @handle-submit="showModalEdit=false" :task="taskAEdit"/>
+            </VCardText>
+          </VCard>
+        </template>
+      </Modal>
+    </Teleport>
   </div>
 </template>
 
 <style scoped>
 /* Styles personnalisés */
 .todo-list {
-  background-color: #ffd166; /* Couleur pour la liste "To Do" */
+  background-color: #b7d0ba; /* Couleur pour la liste "To Do" */
 }
 
 .progress-list {
-  background-color: #06d6a0; /* Couleur pour la liste "In Progress" */
+  background-color: #86cb93; /* Couleur pour la liste "In Progress" */
 }
 
 .done-list {
-  background-color: #ef476f; /* Couleur pour la liste "Done" */
+  background-color: #3dc94a; /* Couleur pour la liste "Done" */
 }
 
 /* Style du fond du modal */

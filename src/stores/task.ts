@@ -65,7 +65,22 @@ export const useTaskStore = defineStore('autaskth', () => {
     let data= await response.json()
     return data;
   }
-  return { getAllTaskById,deleteTask,tasks,addTask,tasksToDo,tasksInprogress,tasksDone }
+
+  const editTask = async (task:any) => {
+    alert(task.id)
+    const url_back = import.meta.env.VITE_BACK_URL;
+
+    const response = await fetch(`${url_back}/api/task/${task.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(task)
+    })
+    let data= await response.json()
+    return data;
+  }
+  return { getAllTaskById,deleteTask,editTask,tasks,addTask,tasksToDo,tasksInprogress,tasksDone }
 })
 
 

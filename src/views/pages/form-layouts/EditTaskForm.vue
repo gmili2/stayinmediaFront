@@ -1,18 +1,24 @@
 <script lang="ts" setup>
 import { required } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
-
-const form = ref({
-  name: '',
-  priority: '',
-  status: '',
-  start_date: '',
-  end_date: '',
-  type: '',
-  description: '',
-  owner: '',
+const props =  defineProps({
+  task: {
+    type: Object,
+    required: true,
+  }
 })
-
+const form = ref({
+  name: props.task.name,
+  id: props.task.id,
+  priority:  props.task.priority,
+  status:  props.task.status,
+  start_date:  props.task.start_date,
+  end_date:  props.task.end_date,
+  type:  props.task.type,
+  description:  props.task.description,
+  owner:  props.task.owner.username,
+})
+console.log(props.task.owner)
 const rules = {
   name: { required },
   priority: { required },
@@ -30,10 +36,10 @@ import {useToast} from "vue-toast-notification";
 const $toast = useToast();
 
 const handleSubmit = async () => {
-  v$.value.$touch()
+  alert("update")
   console.log(v$.value.$touch(),v$.value.$error);
   if (!v$.value.$error) {
-    await useTaskStore().addTask(form.value).then(async (response:any)  =>{
+    await useTaskStore().editTask(form.value).then(async (response:any)  =>{
       $toast.open({
         message: 'Task added successfully',
         type: 'success',
@@ -47,6 +53,7 @@ const handleSubmit = async () => {
   }
 }
 const emit = defineEmits(['handleSubmit'])
+
 </script>
 
 <template>
