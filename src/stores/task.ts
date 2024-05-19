@@ -6,6 +6,10 @@ export const useTaskStore = defineStore('autaskth', () => {
   const tasksDone=ref([])
   const tasksInprogress=ref([])
   const tasksToDo=ref([])
+  const priorities = ref([]);
+  const types = ref([]);
+  const statuses = ref([]);
+  const owners = ref([]);
 
   const getAllTaskById = async (code:string) => {
     const url_back = import.meta.env.VITE_BACK_URL;
@@ -80,7 +84,94 @@ export const useTaskStore = defineStore('autaskth', () => {
     let data= await response.json()
     return data;
   }
-  return { getAllTaskById,deleteTask,editTask,tasks,addTask,tasksToDo,tasksInprogress,tasksDone }
-})
+  const getPriorities = async () => {
+    const url_back = import.meta.env.VITE_BACK_URL;
+    try {
+      const response = await fetch(`${url_back}/api/priorities`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      if (response.ok) {
+        let data= await response.json()
+        priorities.value = data.priorities;
+      } else {
+        throw new Error('Identifiant ou mot de passe incorrect. Veuillez réessayer.');
+      }
+    } catch (error:any) {
+      return Promise.reject(error.message);
+    }
+  }
+  const getTypes = async () => {
+    const url_back = import.meta.env.VITE_BACK_URL;
+    try {
+      const response = await fetch(`${url_back}/api/types`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        types.value = data.types;
 
+      } else {
+        throw new Error('Failed to fetch types.');
+      }
+    } catch (error) {
+      return Promise.reject(error.message);
+    }
+  };
+
+  const getStatuses = async () => {
+    const url_back = import.meta.env.VITE_BACK_URL;
+    try {
+      const response = await fetch(`${url_back}/api/status`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        statuses.value = data.status;
+
+      } else {
+        throw new Error('Failed to fetch statuses.');
+      }
+    } catch (error) {
+      return Promise.reject(error.message);
+    }
+  };
+
+  const getOwners = async () => {
+    const url_back = import.meta.env.VITE_BACK_URL;
+    try {
+      const response = await fetch(`${url_back}/api/users`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        owners.value = data.users;
+      } else {
+        throw new Error('Failed to fetch owners.');
+      }
+    } catch (error) {
+      return Promise.reject(error.message);
+    }
+  }
+return { getAllTaskById,deleteTask,editTask,tasks,addTask,tasksToDo,tasksInprogress,tasksDone,    getPriorities,
+    priorities,
+    getTypes,
+    types,
+    getStatuses,
+    statuses,
+    getOwners,
+    owners,
+}
+});
 

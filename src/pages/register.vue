@@ -1,19 +1,18 @@
 <script setup lang="ts">
 import { useTheme } from 'vuetify'
-import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
-
-import logo from '@images/logo.svg?raw'
+import {router} from "@/plugins/router";
 import authV1MaskDark from '@images/pages/auth-v1-mask-dark.png'
 import authV1MaskLight from '@images/pages/auth-v1-mask-light.png'
 import authV1Tree2 from '@images/pages/auth-v1-tree-2.png'
 import authV1Tree from '@images/pages/auth-v1-tree.png'
 
-const form = ref({
-  username: '',
-  email: '',
-  password: '',
+const form = reactive({
+  username: 'test',
+  email: 'test',
+  password: 'test',
+  photo: '1709077827280.jpeg',
   privacyPolicies: false,
-})
+});
 
 const vuetifyTheme = useTheme()
 
@@ -24,6 +23,35 @@ const authThemeMask = computed(() => {
 })
 
 const isPasswordVisible = ref(false)
+const url_back = import.meta.env.VITE_BACK_URL;
+
+const createUser = async () => {
+  console.log('yes',url_back)
+  try {
+    const token = localStorage.getItem('token');
+
+    const response = await fetch(`${url_back}/api/user`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        username: form.username,
+        email: form.email,
+        password: form.password,
+        photo: form.photo,
+        roles: ['ROLE_USER']
+      }),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to create user');
+    }
+    router.push('/login');
+  } catch (error) {
+    console.error('Failed to create user', error);
+  }
+}
 </script>
 
 <template>
@@ -41,7 +69,7 @@ const isPasswordVisible = ref(false)
       </VCardItem>
 
       <VCardText>
-        <VForm @submit.prevent="() => {}">
+        <VForm @submit.prevent="createUser">
           <VRow>
             <!-- Username -->
             <VCol cols="12">
@@ -102,7 +130,6 @@ const isPasswordVisible = ref(false)
               <VBtn
                 block
                 type="submit"
-                to="/"
               >
                 Sign up
               </VBtn>
