@@ -34,22 +34,44 @@ const getAllForeignKeys = async () => {
 }
 
 // Mapped foreign key data
-const mappedPriorities = computed(() => taskStore.priorities.map(priority => ({ title: priority.label, value: priority.code })))
-const mappedTypes = computed(() => taskStore.types.map(type => ({ title: type.label, value: type.code })))
-const mappedStatuses = computed(() => taskStore.statuses.map(status => ({ title: status.label, value: status.code })))
+const mappedPriorities = computed(() => taskStore.priorities.map(priority => ({ title: priority.label, value: priority.id })))
+const mappedTypes = computed(() => taskStore.types.map(type => ({ title: type.label, value: type.id })))
+const mappedStatuses = computed(() => taskStore.statuses.map(status => ({ title: status.label, value: status.id })))
 const mappedOwners = computed(() => taskStore.owners.map(owner => ({ title: owner.username, value: owner.id })))
 
-// Filter selections
-const selectedPriorities = ref([])
-const selectedTypes = ref([])
-const selectedStatuses = ref([])
-const selectedOwners = ref([])
+
 
 // Task Lists
 const todoList = computed(() => taskStore.tasksToDo)
 const progressList = computed(() => taskStore.tasksInprogress)
 const doneList = computed(() => taskStore.tasksDone)
 
+const searchTasksForm = reactive({
+  priority: null,
+  status: null,
+  type: null,
+  owner: null,
+})
+
+const searchTasks =async () => {
+  isLoading.value = true
+
+  const query = {
+    priority: searchTasksForm.priority.join(','),
+    status: searchTasksForm.status.join(','),
+    type: searchTasksForm.type.join(','),
+    owner: searchTasksForm.owner.join(',')
+  }
+
+  const queryString = new URLSearchParams(query).toString()
+
+  await taskStore.getAllTaskByMultiCriteria(queryString)
+
+  allTasks.value = taskStore.tasks
+  isLoading.value = false
+
+
+};
 // Move task between lists
 const moveToProgress = (index: number) => {
   const taskToMove = todoList.value.splice(index, 1)[0]
@@ -81,7 +103,7 @@ onBeforeMount(() => {
     <VRow class="flex align-content-center justify-space-between mb-4">
       <VCol>
         <VSelect
-          v-model="selectedPriorities"
+          v-model="searchTasksForm.priority"
           :items="mappedPriorities"
           item-title="title"
           item-value="value"
@@ -96,14 +118,14 @@ onBeforeMount(() => {
               v-if="index === 2"
               class="text-grey text-caption align-self-center"
             >
-              (+{{ selectedPriorities.length - 2 }} others)
-            </span>
+            (+{{ searchTasksForm.priority.length - 2 }} others)
+          </span>
           </template>
         </VSelect>
       </VCol>
       <VCol>
         <VSelect
-          v-model="selectedTypes"
+          v-model="searchTasksForm.type"
           :items="mappedTypes"
           item-title="title"
           item-value="value"
@@ -118,14 +140,14 @@ onBeforeMount(() => {
               v-if="index === 2"
               class="text-grey text-caption align-self-center"
             >
-              (+{{ selectedTypes.length - 2 }} others)
-            </span>
+            (+{{ searchTasksForm.type.length - 2 }} others)
+          </span>
           </template>
         </VSelect>
       </VCol>
       <VCol>
         <VSelect
-          v-model="selectedStatuses"
+          v-model="searchTasksForm.status"
           :items="mappedStatuses"
           item-title="title"
           item-value="value"
@@ -140,14 +162,14 @@ onBeforeMount(() => {
               v-if="index === 2"
               class="text-grey text-caption align-self-center"
             >
-              (+{{ selectedStatuses.length - 2 }} others)
-            </span>
+            (+{{ searchTasksForm.status.length - 2 }} others)
+          </span>
           </template>
         </VSelect>
       </VCol>
       <VCol>
         <VSelect
-          v-model="selectedOwners"
+          v-model="searchTasksForm.owner"
           :items="mappedOwners"
           item-title="title"
           item-value="value"
@@ -162,13 +184,13 @@ onBeforeMount(() => {
               v-if="index === 2"
               class="text-grey text-caption align-self-center"
             >
-              (+{{ selectedOwners.length - 2 }} others)
-            </span>
+            (+{{ searchTasksForm.owner.length - 2 }} others)
+          </span>
           </template>
         </VSelect>
       </VCol>
       <VCol>
-        <IconBtn>
+        <IconBtn @click="searchTasks">
           <VIcon icon="ri-search-line" />
         </IconBtn>
       </VCol>

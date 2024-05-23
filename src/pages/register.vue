@@ -28,13 +28,12 @@ const url_back = import.meta.env.VITE_BACK_URL;
 const createUser = async () => {
   console.log('yes',url_back)
   try {
-    const token = localStorage.getItem('token');
+  //  const token = localStorage.getItem('token');
 
     const response = await fetch(`${url_back}/api/user`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify({
         username: form.username,

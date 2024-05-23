@@ -10,6 +10,7 @@ export const useTaskStore = defineStore('autaskth', () => {
   const types = ref([]);
   const statuses = ref([]);
   const owners = ref([]);
+  const url_back = import.meta.env.VITE_BACK_URL;
 
   const getAllTaskById = async (code:string) => {
     const url_back = import.meta.env.VITE_BACK_URL;
@@ -55,7 +56,6 @@ export const useTaskStore = defineStore('autaskth', () => {
       return Promise.reject(error.message);
     }
   }
-
   const addTask = async (task:any) => {
     const url_back = import.meta.env.VITE_BACK_URL;
 
@@ -69,7 +69,6 @@ export const useTaskStore = defineStore('autaskth', () => {
     let data= await response.json()
     return data;
   }
-
   const editTask = async (task:any) => {
     alert(task.id)
     const url_back = import.meta.env.VITE_BACK_URL;
@@ -123,7 +122,6 @@ export const useTaskStore = defineStore('autaskth', () => {
       return Promise.reject(error.message);
     }
   };
-
   const getStatuses = async () => {
     const url_back = import.meta.env.VITE_BACK_URL;
     try {
@@ -144,7 +142,6 @@ export const useTaskStore = defineStore('autaskth', () => {
       return Promise.reject(error.message);
     }
   };
-
   const getOwners = async () => {
     const url_back = import.meta.env.VITE_BACK_URL;
     try {
@@ -164,6 +161,43 @@ export const useTaskStore = defineStore('autaskth', () => {
       return Promise.reject(error.message);
     }
   }
+  const getAllTaskByMultiCriteria = async (queryString) => {
+
+    const url = `${url_back}/api/tasks/getTasksByMultiCriteria?${queryString}`;
+
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+
+        // Ensure data is always treated as an array
+        const tasksArray = Array.isArray(data) ? data[0].tasks : data.tasks;
+
+        tasks.value = tasksArray;
+
+        // Filter tasks based on their status
+        console.log(tasks.value)
+        tasksToDo.value = tasks.value.filter(task => task.status === 'TODO');
+        tasksInprogress.value = tasks.value.filter(task => task.status === 'IN_PROGRESS');
+        tasksDone.value = tasks.value.filter(task => task.status === 'DONE');
+
+        console.log('tasksToDo', tasksToDo.value);
+        console.log('tasksInprogress', tasksInprogress.value);
+        console.log('tasksDone', tasksDone.value);
+      } else {
+        throw new Error('Error fetching tasks by multi criteria.');
+      }
+    } catch (error) {
+      console.error('Error fetching tasks:', error.message);
+    }
+  };
+
+
 return { getAllTaskById,deleteTask,editTask,tasks,addTask,tasksToDo,tasksInprogress,tasksDone,    getPriorities,
     priorities,
     getTypes,
@@ -172,6 +206,7 @@ return { getAllTaskById,deleteTask,editTask,tasks,addTask,tasksToDo,tasksInprogr
     statuses,
     getOwners,
     owners,
+  getAllTaskByMultiCriteria,
 }
 });
 
