@@ -1,38 +1,18 @@
-# vue
+# Plateforme de Livraison – Vue 3 + Vite
 
-This template should help get you started developing with Vue 3 in Vite.
+Ce projet a été initié dans le but de créer une plateforme de livraison en utilisant **Vue 3** avec **Vite** pour une performance optimale et une expérience de développement moderne.  
+Le développement a été interrompu à un stade précoce, mais il constitue une bonne base pour toute personne souhaitant reprendre ou s’en inspirer.
 
-## Recommended IDE Setup
+## Stack technique
 
-[VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar) (and disable Vetur).
+- ⚙️ Vue 3
+- ⚡ Vite
+- 💅 Composition API
+- 🧪 TypeScript (préconfiguré)
 
-## Type Support for `.vue` Imports in TS
+## Installation
 
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates.
-
-However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can run `Volar: Switch TS Plugin on/off` from VS Code command palette.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
+```bash
 npm install
-```
 
-### Compile and Hot-Reload for Development
-
-```sh
 npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-
-
